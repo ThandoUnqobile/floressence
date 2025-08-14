@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Floressence</title>
+<link rel="stylesheet" href="styles.css">
+<script>
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function renderCart() {
+    let container = document.getElementById('cart-items');
+    let total = 0;
+    container.innerHTML = '';
+    cart.forEach(item => {
+        container.innerHTML += `<p>${item.product} - R${item.price}</p>`;
+        total += item.price;
+    });
+    document.getElementById('total').innerText = 'R' + total;
+}
+
+function payWithPayFast() {
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    document.getElementById('amount').value = total;
+    document.getElementById('payfast-form').submit();
+}
+
+function orderOnWhatsApp() {
+    let name = document.getElementById('name').value;
+    let address = document.getElementById('address').value;
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    let orderList = cart.map(item => `- ${item.product} = R${item.price}`).join('%0A');
+    let message = `Hi, I'd like to place an order:%0AName: ${name}%0AAddress: ${address}%0AOrder:%0A${orderList}%0ATotal: R${total}`;
+    window.open(`https://wa.me/27718008231?text=${message}`, '_blank');
+}
+
+window.onload = renderCart;
+</script>
+</head>
+<body>
+<header>
+    <h1>Checkout</h1>
+</header>
+<main class="container">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <h3>Total: <span id="total"></span></h3>
+
+    <h3>Your Details</h3>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <textarea id="address" placeholder="Delivery Address" required></textarea>
+
+    <h3>Choose Payment Option</h3>
+    <button onclick="payWithPayFast()">Pay with Card (PayFast)</button>
+    <button onclick="orderOnWhatsApp()">Place Order on WhatsApp</button>
+
+    <form id="payfast-form" action="https://sandbox.payfast.co.za/eng/process" method="post" style="display:none;">
+        <input type="hidden" name="merchant_id" value="10000100">
+        <input type="hidden" name="merchant_key" value="46f0cd694581a">
+        <input type="hidden" name="return_url" value="thank-you.html">
+        <input type="hidden" name="cancel_url" value="checkout.html">
+        <input type="hidden" name="notify_url" value="">
+        <input type="hidden" name="name_first" id="pf-name">
+        <input type="hidden" name="email_address" value="test@test.com">
+        <input type="hidden" name="amount" id="amount">
+        <input type="hidden" name="item_name" value="Floressence Order">
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop - Floressence</title>
+<link rel="stylesheet" href="styles.css">
+<script>
+let cart = [];
+function addToCart(product, price) {
+    cart.push({product, price});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(product + " added to cart!");
+}
+</script>
+</head>
+<body>
+<header>
+    <h1>Our Products</h1>
+</header>
+<main class="container products">
+    <div class="product">
+        <img src="placeholder.jpg" alt="Product">
+        <h3>Sample Product</h3>
+        <p class="price">R100</p>
+        <button onclick="addToCart('Sample Product', 100)">Add to Cart</button>
+    </div>
+</main>
+</body>
+</html>
